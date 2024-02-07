@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Form</title>
+</head>
+<body>
+    <h2>My Form</h2>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+
+    {% if submitted_data %}
+        <p>Submitted Data:</p>
+        <ul>
+            <li><strong>Square Footage:</strong> {{ submitted_data.square_footage }}m</li>
+            <li><strong>Ceiling Height:</strong> {{ submitted_data.ceiling_height }}m</li>
+            <li><strong>Zip code:</strong> {{ calculated_data.zip_code }}</li>
+            <li><strong>Latitude:</strong> {{ calculated_data.latitude }}</li>
+            <li><strong>Longitude:</strong> {{ calculated_data.longitude }}</li>
+            <li><strong>Air Change Rate:</strong> {{ submitted_data.air_change_rate }}</li>
+            <li><strong>Wall Insulation R-Value:</strong> {{ submitted_data.wall_insulation_rvalue }}</li>
+            <li><strong>Home Heat Capacity:</strong> {{ submitted_data.home_heat_capacity }}</li>
+            <li><strong>Heating Type:</strong> {{ submitted_data.heating_type }}</li>
+            <li><strong>South Facing Window Size:</strong> {{ submitted_data.south_facing_window_size }}</li>
+            <li><strong>Window Solar Heat Gain Coefficient:</strong> {{ submitted_data.window_solar_heat_gain_coefficient }}</li>
+        </ul>
+
+        <p>Calculated energy balance</p>
+        <p> {{ calculated_data.monthly_energy_balance }}</p>
+
+    {% endif %}
+
+</body>
+</html>
