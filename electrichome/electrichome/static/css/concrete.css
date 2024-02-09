@@ -1,5 +1,5 @@
 /*! concrete.css v2.1.1 | MIT License | github.com/louismerlin/concrete.css */
-
+/* Altered for electric-home-project */
 /**
  * Set universal color variables
  */
@@ -120,17 +120,16 @@
   input[type="button"],
   input[type="reset"],
   input[type="submit"] {
-    display: inline-block; /* 1 */
-    vertical-align: middle; /* 1 */
+    display: block; /* 1 */
     padding: .4rem 1rem; /* 1 */
     font-size: 2rem; /* 1 */
     font-weight: normal; /* 1 */
     margin-bottom: 1rem; /* 1 */
-    background: var(--bg); /* 2 */
+    background-color: #04AA6D; /* 2 */
     color: var(--fg); /* 2 */
-    border: .2rem solid var(--fg); /* 2 */
     border-radius: 0; /* 2 */
     cursor: pointer; /* 3 */
+    margin: auto;
   }
   
   /**
@@ -171,6 +170,7 @@
     display: block; /* 1 */
     font-weight: bold; /* 1 */
     margin-bottom: .8rem; /* 2 */
+    text-align: center;
   }
   
   /** 
@@ -193,20 +193,19 @@
     box-shadow: none; /* 1 */
     box-sizing: inherit; /* 1 */
     padding: .4rem 1rem; /* 1 */
-    width: 100%; /* 1 */
+   /*  width: 100%; */ /* 1 */
     font-size: 2rem; /* 1 */
     color: var(--fg); /* 2 */
     background-color: var(--bg); /* 2 */
     border: .2rem solid var(--fg); /* 2 */
     border-radius: 0; /* 2 */
+    display: block;
+    margin: auto;
+    text-align: center;
   }
   
-  /**
-   * Set margin for form elements.
-   */
-  
-  fieldset, input, select, textarea {
-    margin: 0 0 1.6rem 0;
+  input[type=number] {
+    text-align:right;
   }
   
   /**
@@ -226,6 +225,7 @@
    */
   
   table {
+    margin-top: 20px;
     width: 100%; /* 1 */
     border-spacing: 0; /* 2 */
   }
@@ -357,3 +357,15 @@
   hr {
     border: .1rem solid var(--fg);
   }
+
+  p, h2, h5 {
+    width: 75%;
+    margin: auto;
+    margin-bottom: 40px;
+    display: block;
+  }
+
+  h2, h5 {
+    text-align: center;
+  }
+  

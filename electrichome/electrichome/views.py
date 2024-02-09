@@ -7,18 +7,18 @@ from . import conversions
 
 
 class MyForm(forms.Form):
-    square_footage = forms.DecimalField(label='Square Footage', initial=2000)
-    ceiling_height = forms.DecimalField(label='Ceiling Height', initial=9)
+    zip_code = forms.Field(label='What is your zip code?', initial="10001")
+    square_footage = forms.DecimalField(label='What is the square footage of your conditioned home?', initial=2000)
+    ceiling_height = forms.DecimalField(label='How high are your ceilings (in feet), on average?', initial=9)
 
-    zip_code = forms.DecimalField(label='Zip code', initial="10001")
-    air_change_rate = forms.DecimalField(label='Air Change Rate', initial=16)
-    wall_insulation_rvalue = forms.DecimalField(label='Wall Insulation R-Value', initial=10)
+    air_change_rate = forms.DecimalField(label='What is the Air Change Rate per hour?', initial=16)
+    wall_insulation_rvalue = forms.DecimalField(label='What is your wall insulation R-Value?', initial=10)
 
-    heat_temperature = forms.DecimalField(label='Thermostat heater temperature (F)')
-    cool_temperature = forms.DecimalField(label='Thermostat air conditioner temperature (F)')
-    home_heat_capacity = forms.DecimalField(label='Home Heat Capacity', initial=10000)
+    heat_temperature = forms.DecimalField(label='What is your thermostat to in the winter? (in F)')
+    cool_temperature = forms.DecimalField(label='What is your thermostat to in the summer? (F)')
+    home_heat_capacity = forms.DecimalField(label='How much energy (in kJ) do you have to put into the building to change the indoor temperature by 1 degree?', initial=10000)
     heating_type = forms.ChoiceField(choices=[('electric_radiator', 'Electric Radiator'), ('high_efficiency_heat_pump', 'High Efficiency Heat Pump')], initial='electric_radiator', label='Heating Type')
-    south_facing_window_size = forms.DecimalField(label='South Facing Window Size', initial=100)
+    south_facing_window_size = forms.DecimalField(label='How many square feet total are the south-facing windows?', initial=100)
     window_solar_heat_gain_coefficient = forms.DecimalField(label='Window Solar Heat Gain Coefficient', initial=0.5)
 
 def my_view(request):
