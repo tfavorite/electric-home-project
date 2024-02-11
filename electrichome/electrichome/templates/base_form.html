@@ -29,10 +29,11 @@
             <li><strong>South Facing Window Size:</strong> {{ submitted_data.south_facing_window_size }}</li>
             <li><strong>Window Solar Heat Gain Coefficient:</strong> {{ submitted_data.window_solar_heat_gain_coefficient }}</li>
         </ul> -->
-        <div id="monthly_energy_balance_presentation"></div>
+        <!-- <div id="monthly_energy_balance_presentation"></div>
         {{ calculated_data.monthly_energy_balance|json_script:"monthly_energy_balance" }}
         <script>
             const monthlyEnergyBalanceRaw = JSON.parse(document.getElementById("monthly_energy_balance").textContent);
+            // turn this into a model we can render as a table or chart (if needed)
             const monthlyEnergyBalance = {};
             Object.values(monthlyEnergyBalanceRaw.value).forEach( (value, index) => {
                 const variable = monthlyEnergyBalanceRaw.variable[index];
@@ -42,7 +43,6 @@
                 monthlyEnergyBalance[variable].push(value);
             });
             monthlyEnergyBalance.Month = Object.values(monthlyEnergyBalanceRaw.month).slice(0, 12);
-            console.log(monthlyEnergyBalance);
 
             const table = document.createElement("table");
             const headerRow = table.insertRow();
@@ -61,7 +61,7 @@
             });
 
             document.getElementById('monthly_energy_balance_presentation').appendChild(table);
-        </script>
+        </script> -->
         
         <!-- <p>Calculated energy balance</p>
         <p> {{ calculated_data.monthly_energy_balance }}</p> -->

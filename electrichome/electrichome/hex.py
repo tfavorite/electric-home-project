@@ -19,7 +19,24 @@ JOULES_PER_MEGAJOULE = 1e6
 SECONDS_PER_HOUR = 3600
 AIR_VOLUMETRIC_HEAT_CAPACITY = 1200  # Energy in joules per cubic meter of air per degree K. (J/m3/K)
 
-SIMULATION_YEAR = 2022
+SIMULATION_YEAR = "tmy"
+
+heating_types = {
+    "natural_gas": {
+        "value": "natural_gas",
+        "label": "Natural Gas",
+        "efficiency": 0.8,
+        "cost_per_kwh": lambda kwh : (kwh/29.3) * 1.0092,
+        "co2_per_kwh": lambda kwh : (kwh/29.3) * 0.0053
+    },
+    "heat_pump": {
+        "value": "heat_pump",
+        "label": "Heat Pump",
+        "efficiency": 4,
+        "cost_per_kwh": lambda kwh : kwh * 0.1921,
+        "co2_per_kwh": lambda kwh : kwh * 0.000305
+    }
+}
 
 @dataclass
 class HomeCharacteristics:
@@ -28,13 +45,13 @@ class HomeCharacteristics:
     heating_setpoint_c: int
     cooling_setpoint_c: int
     hvac_capacity_w: int
-    hvac_overall_system_efficiency: int
     conditioned_floor_area_sq_m: int
     ceiling_height_m: int
     wall_insulation_r_value_imperial: int
     ach50: int
     south_facing_window_size_sq_m: int
     window_solar_heat_gain_coefficient: int
+    heating_type: int
 
     @property
     def building_volume_cu_m(self) -> int:
@@ -183,6 +200,8 @@ def calculate_next_timestep(
     # ΔT is the change in indoor temperature during this timestep resulting from the total energy input
     delta_t = total_energy_in_j / home.building_heat_capacity
 
+    hvac_overall_system_efficiency = home.heating_type["efficiency"]
+
     return pd.Series(
         {
             "timestamp": timestamp,
@@ -197,7 +216,7 @@ def calculate_next_timestep(
             "Outdoor Temperature (C)": outdoor_temperature_c,
             "Indoor Temperature (C)": indoor_temperature_c + delta_t,
             # Actual energy consumption from the HVAC system:
-            "HVAC energy use (kWh)": abs(energy_from_hvac_j) / (JOULES_PER_KWH * home.hvac_overall_system_efficiency)
+            "HVAC energy use (kWh)": abs(energy_from_hvac_j) / (JOULES_PER_KWH * hvac_overall_system_efficiency)
         }
     )
 
@@ -223,23 +242,35 @@ def get_monthly_energy_balance(home, solar_weather_timeseries, window_irradiance
 
     # For each month, let's look at the overall energy balance:
     # Where is the thermal energy in the house coming from, and where is it going to?
-    energy_transfer_columns = [col for col in baby_energy_model.columns if col.endswith("(J)")]
+   # energy_transfer_columns = [col for col in baby_energy_model.columns if col.endswith("(J)")]
     get_month=lambda idx: baby_energy_model.loc[idx]['timestamp'].month
-    monthly_energy_balance_mj = baby_energy_model.groupby(by=get_month)[energy_transfer_columns].sum() / JOULES_PER_MEGAJOULE
+   # monthly_energy_balance_mj = baby_energy_model.groupby(by=get_month)[energy_transfer_columns].sum() / JOULES_PER_MEGAJOULE
 
-    monthly_energy_balance_mj['month'] = monthly_energy_balance_mj.index.map(lambda month_idx: f'{month_idx:0=2} - {calendar.month_name[month_idx]}')
+   # monthly_energy_balance_mj['month'] = monthly_energy_balance_mj.index.map(lambda month_idx: f'{month_idx:0=2} - {calendar.month_name[month_idx]}')
 
-    monthly_energy_balance_tidy = monthly_energy_balance_mj.melt(id_vars='month')
+    monthly_energy_use_kwh = baby_energy_model.groupby(by=get_month)["HVAC energy use (kWh)"].sum() 
+  #  monthly_energy_balance_tidy = monthly_energy_use_kwh.melt(id_vars='month')
 
-    print("------------------ baby_energy_model - %s" % type(baby_energy_model))
-    print(baby_energy_model)
-    print("------------------ monthly_energy_balance_mj - %s" % type(monthly_energy_balance_mj))
-    print(monthly_energy_balance_mj)
-    # print("------------------ monthly")
-    # print(monthly_energy_balance_mj['month'])
-    print("------------------ monthly_energy_balance_tidy - %s" % type(monthly_energy_balance_tidy))
-    print(monthly_energy_balance_tidy)
-    print("------------------")
+    # print("------------------ baby_energy_model - %s" % type(baby_energy_model))
+    # print(baby_energy_model)
+    # print("------------------ monthly_energy_balance_mj - %s" % type(monthly_energy_balance_mj))
+    # print(monthly_energy_balance_mj)
+    # # print("------------------ monthly")
+    # # print(monthly_energy_balance_mj['month'])
+    # print("------------------ monthly_energy_balance_tidy - %s" % type(monthly_energy_balance_tidy))
+    # print(monthly_energy_balance_tidy)
+    # print("------------------")
 
-    pprint.pprint(monthly_energy_balance_mj.to_dict())
-    return monthly_energy_balance_tidy.to_dict()
+    return monthly_energy_use_kwh.to_dict()
+    #return monthly_energy_balance_tidy.to_dict()
+
+def get_yearly_energy_usage(monthly_energy_balance):
+    energy_usage_list = []
+    for key in monthly_energy_balance["variable"]:
+        value = monthly_energy_balance["variable"][key]
+        if ( value == "HVAC energy (kWh)"):
+            energy_usage_list.append(monthly_energy_balance["value"][key])
+    
+    yearly_energy_usage = sum(energy_usage_list)
+
+    return yearly_energy_usage

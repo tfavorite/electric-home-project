@@ -9,7 +9,7 @@ def get_geocode_info(zip_code):
         response = requests.get(base_url, params=params)
         response.raise_for_status()
         data = response.json()
-        print(data)
+  #      print(data)
         return data
     except requests.RequestException as e:
         print(f"Error making request: {e}")
