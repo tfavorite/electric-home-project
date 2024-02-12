@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from .credentials import PROJECT_SECRET_KEY
+from .local_settings import LOCAL_DEBUG_MODE, LOCAL_ALLOWED_HOSTS, LOCAL_STATIC_ROOT
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = PROJECT_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = LOCAL_DEBUG_MODE
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = LOCAL_ALLOWED_HOSTS
 
 
 # Application definition
@@ -77,10 +78,10 @@ WSGI_APPLICATION = 'electrichome.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #}
 }
 
 
@@ -123,6 +124,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'electrichome', 'static')
 ]
+
+STATIC_ROOT = LOCAL_STATIC_ROOT
 
 # Needed during deployment, not development
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
