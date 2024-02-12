@@ -5,7 +5,6 @@ from .location import get_lat_long
 from .hex import HomeCharacteristics, get_solar_timeseries, get_monthly_energy_balance, get_yearly_energy_usage, heating_types
 from . import conversions
 
-
 class MyForm(forms.Form):
     zip_code = forms.Field(label='What is your zip code?', initial="10001")
     square_footage = forms.DecimalField(label='What is the square footage of your conditioned home?', initial=2000)
@@ -14,8 +13,8 @@ class MyForm(forms.Form):
    # air_change_rate = forms.DecimalField(label='What is the Air Change Rate per hour?', initial=16)
    # wall_insulation_rvalue = forms.DecimalField(label='What is your wall insulation R-Value?', initial=10)
 
-    heat_temperature = forms.DecimalField(label='What is your thermostat to in the winter? (in F)')
-    cool_temperature = forms.DecimalField(label='What is your thermostat to in the summer? (F)')
+    heat_temperature = forms.DecimalField(label='What is your thermostat to in the winter? (in F)', initial=72)
+    cool_temperature = forms.DecimalField(label='What is your thermostat to in the summer? (F)', initial=72)
    # home_heat_capacity = forms.DecimalField(label='How much energy (in kJ) do you have to put into the building to change the indoor temperature by 1 degree?', initial=10000)
    # heating_type = forms.ChoiceField(choices=[('electric_radiator', 'Electric Radiator'), ('high_efficiency_heat_pump', 'High Efficiency Heat Pump')], initial='electric_radiator', label='Heating Type')
     south_facing_window_size = forms.DecimalField(label='How many square feet total are the south-facing windows?', initial=100)
