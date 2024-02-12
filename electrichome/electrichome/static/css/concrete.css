@@ -369,3 +369,29 @@
     text-align: center;
   }
   
+  #results {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 50px;
+    font-weight: bold;
+  }
+
+  #submitBtn.submitting {
+    display: none;
+  }
+
+  #loadingMessage {
+    display: none;
+  }
+  #loadingMessage.submitting {
+    display: block;
+    text-align: center;
+  }
+
+span.saving {
+    color: #04AA6D;
+}   
+
+span.cost {
+    color: lightslategray;
+}

@@ -4,6 +4,12 @@
     <title>Residential Information</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/concrete.css' %}" />
+    <script>
+        function disappearSubmitBtn() {
+            document.getElementById("submitBtn").classList.add("submitting");
+            document.getElementById("loadingMessage").classList.add("submitting");
+        }  
+    </script>
 </head>
 <body>
     <h2>How much could you reduce your CO2 emissions by switching to a heat pump?</h2>
@@ -11,10 +17,16 @@
     <form method="post" action="">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Submit">
+        <input id="submitBtn" onclick="disappearSubmitBtn()" type="submit" value="Submit">
     </form>
 
+    <div id="loadingMessage">Calculating...</div>
+
     {% if submitted_data %}
+        <div id="results">By switching to a heat pump and weatherizing, each year you might use <span class="saving">{{ calculated_data.difference.kwh }} fewer kilowatt hours</span>, 
+            reduce your CO2 emissions by <span class="saving">{{ calculated_data.difference.co2 }} metric tons</span>, 
+            and {% if calculated_data.difference.cost < 0 %}it will cost <span class="cost">${{ calculated_data.difference.abs_cost }}</span>{% else %}save <span class="saving">${{ calculated_data.difference.cost }}</span>{% endif %}.
+        </div>
         <!-- <p>Submitted Data:</p>
         <ul>
             <li><strong>Square Footage:</strong> {{ submitted_data.square_footage }}m</li>

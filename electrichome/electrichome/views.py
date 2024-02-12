@@ -109,9 +109,10 @@ def _do_the_thing(submitted_data):
     natural_gas = energy_usages[heating_types["natural_gas"]["value"]]
     heat_pump = energy_usages[heating_types["heat_pump"]["value"]]
     diff_from_before = {
-        "kwh": heat_pump["yearly_kwh"] - natural_gas["yearly_kwh"],
-        "cost": heat_pump["yearly_cost"] - natural_gas["yearly_cost"],
-        "co2": heat_pump["yearly_co2"] - natural_gas["yearly_co2"]
+        "kwh": round(natural_gas["yearly_kwh"] - heat_pump["yearly_kwh"]),
+        "cost": round(natural_gas["yearly_cost"] - heat_pump["yearly_cost"]),
+        "abs_cost": abs(round(natural_gas["yearly_cost"] - heat_pump["yearly_cost"])),
+        "co2": '%.2f'%(natural_gas["yearly_co2"] - heat_pump["yearly_co2"])
     }
 
     return {
