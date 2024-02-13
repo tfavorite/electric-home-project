@@ -93,11 +93,19 @@ def _do_the_thing(submitted_data):
     )
 
     energy_usages = {}
+    summer_months = [6, 7, 8, 9]
+
+    def heating_months_only(pair):
+        key, value = pair
+        return key not in summer_months
+
 
     for home in [home_before, home_after]:
         solar_timeseries, window_irradiance = get_solar_timeseries(home)
 
-        yearly_energy_usage = sum(get_monthly_energy_balance(home, solar_timeseries, window_irradiance).values())
+        filtered_monthly_energy_balance = dict(filter(heating_months_only, get_monthly_energy_balance(home, solar_timeseries, window_irradiance).items()))
+
+        yearly_energy_usage = sum(filtered_monthly_energy_balance.values())
 
         energy_usages[home.heating_type["value"]] = {
             "yearly_kwh" : yearly_energy_usage,

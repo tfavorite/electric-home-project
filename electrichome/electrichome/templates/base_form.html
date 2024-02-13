@@ -26,7 +26,7 @@
         {% load humanize %}
         <div id="results">By switching to a heat pump and weatherizing, each year you might use <span class="saving">{{ calculated_data.difference.kwh | intcomma }} fewer kilowatt hours</span>, 
             reduce your CO2 emissions by <span class="saving">{{ calculated_data.difference.co2 }} metric tons</span>, 
-            and {% if calculated_data.difference.cost < 0 %}it will cost <span class="cost">${{ calculated_data.difference.abs_cost }}</span>{% else %}save <span class="saving">${{ calculated_data.difference.cost }}</span>{% endif %}.
+            and {% if calculated_data.difference.cost < 0 %}it will cost <span class="cost">${{ calculated_data.difference.abs_cost }} more</span>{% else %}save <span class="saving">${{ calculated_data.difference.cost }}</span>{% endif %}.
         </div>
         <!-- <p>Submitted Data:</p>
         <ul>
