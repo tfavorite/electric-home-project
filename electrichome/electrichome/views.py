@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django import forms
+from django.http import JsonResponse
+import requests
 
 from .location import get_lat_long
 from .hex import HomeCharacteristics, get_solar_timeseries, get_monthly_energy_balance, get_yearly_energy_usage, heating_types
+from .credentials import OPEN_CAGE_API_KEY
 from . import conversions
 
 class MyForm(forms.Form):
@@ -117,3 +120,19 @@ def _do_the_thing(submitted_data):
         "energy_usages": energy_usages,
         "difference": diff_from_before
     }
+
+def geocode(request, location):
+    opencage_api_key = OPEN_CAGE_API_KEY
+    opencage_url = f'https://api.opencagedata.com/geocode/v1/json?q={location}&key={opencage_api_key}'
+
+    try:
+        response = requests.get(opencage_url)
+        data = response.json()
+
+        if response.status_code == 200 and 'results' in data:
+            result = data['results'][0]['geometry']
+            return JsonResponse({'latitude': result['lat'], 'longitude': result['lng']})
+        else:
+            return JsonResponse({'error': 'Geocoding failed'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

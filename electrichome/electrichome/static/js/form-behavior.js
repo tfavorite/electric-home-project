@@ -4,12 +4,15 @@
             // Show loading spinner
             document.getElementById('loadingSpinner').style.display = 'block';
 
-            // Use OpenCage Geocoding API
-            fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(locationInput)}&key=API_KEY_PLACEHOLDER`)
+            fetch(`/api/geocode/${encodeURIComponent(locationInput)}/`)
                 .then(response => response.json())
                 .then(data => {
-                    var latitude = data.results[0].geometry.lat;
-                    var longitude = data.results[0].geometry.lng;
+                    if ('error' in data) {
+                        throw new Error(data.error);
+                    }
+
+                    var latitude = data.latitude;
+                    var longitude = data.longitude;
 
                     document.getElementById('id_latitude').value = latitude;
                     document.getElementById('id_longitude').value = longitude;
