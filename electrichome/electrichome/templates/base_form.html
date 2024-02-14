@@ -4,21 +4,29 @@
     <title>Residential Information</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/concrete.css' %}" />
-    <script>
-        function disappearSubmitBtn() {
-            document.getElementById("submitBtn").classList.add("submitting");
-            document.getElementById("loadingMessage").classList.add("submitting");
-        }  
-    </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form-styles.css' %}" />
+    <script src="{% static 'js/form-behavior.js' %}"></script>
 </head>
 <body>
     <h2>How much could you reduce your CO2 emissions by switching to a heat pump?</h2>
-    <h5>Please enter in as much information as you can, and we'll estimate the rest.</h5>
-    <form method="post" action="#results">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input id="submitBtn" onclick="disappearSubmitBtn()" type="submit" value="Submit">
-    </form>
+    <div id="home-location-section">
+        <h3>Where are you located?</h3>
+            <form id="locationForm">
+            <label for="location">Enter Location:</label>
+            <input type="text" id="location" name="location" required>
+            <button type="button" onclick="getLatLon()">Submit</button>
+        </form>
+    </div>
+    <div id="loadingSpinner">Loading...</div>
+    <div id="home-info-section">
+        <h5>Please enter in as much information as you can, and we'll estimate the rest.</h5>
+        <form id="homeInfoForm" method="post" action="#results">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input id="submitBtn" onclick="disappearSubmitBtn()" type="submit" value="Submit">
+        </form>
+    </div>
+
 
     <div id="loadingMessage">Calculating...</div>
 
@@ -28,20 +36,7 @@
             reduce your CO2 emissions by <span class="saving">{{ calculated_data.difference.co2 }} metric tons</span>, 
             and {% if calculated_data.difference.cost < 0 %}it will cost <span class="cost">${{ calculated_data.difference.abs_cost }} more</span>{% else %}save <span class="saving">${{ calculated_data.difference.cost }}</span>{% endif %}.
         </div>
-        <!-- <p>Submitted Data:</p>
-        <ul>
-            <li><strong>Square Footage:</strong> {{ submitted_data.square_footage }}m</li>
-            <li><strong>Ceiling Height:</strong> {{ submitted_data.ceiling_height }}m</li>
-            <li><strong>Zip code:</strong> {{ calculated_data.zip_code }}</li>
-            <li><strong>Latitude:</strong> {{ calculated_data.latitude }}</li>
-            <li><strong>Longitude:</strong> {{ calculated_data.longitude }}</li>
-            <li><strong>Air Change Rate:</strong> {{ submitted_data.air_change_rate }}</li>
-            <li><strong>Wall Insulation R-Value:</strong> {{ submitted_data.wall_insulation_rvalue }}</li>
-            <li><strong>Home Heat Capacity:</strong> {{ submitted_data.home_heat_capacity }}</li>
-            <li><strong>Heating Type:</strong> {{ submitted_data.heating_type }}</li>
-            <li><strong>South Facing Window Size:</strong> {{ submitted_data.south_facing_window_size }}</li>
-            <li><strong>Window Solar Heat Gain Coefficient:</strong> {{ submitted_data.window_solar_heat_gain_coefficient }}</li>
-        </ul> -->
+
         <!-- <div id="monthly_energy_balance_presentation"></div>
         {{ calculated_data.monthly_energy_balance|json_script:"monthly_energy_balance" }}
         <script>
