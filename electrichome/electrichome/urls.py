@@ -24,5 +24,5 @@ from .views import my_view, geocode
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', my_view, name='my_view'),
-    path('api/geocode/<str:location>/', geocode, name='geocode'),
+    path('api/geocode/<str:city>/<str:state>/', geocode, name='geocode'),
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) # # Needed during deployment, not development

@@ -1,5 +1,8 @@
         function getLatLon() {
-            var locationInput = document.getElementById('location').value;
+            var cityInput = document.getElementById('city').value;
+            var stateInput = document.getElementById('state').value;
+
+            var locationInput = `${cityInput}/${stateInput}`;
 
             // Show loading spinner
             document.getElementById('loadingSpinner').style.display = 'block';

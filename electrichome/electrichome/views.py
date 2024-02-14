@@ -121,7 +121,8 @@ def _do_the_thing(submitted_data):
         "difference": diff_from_before
     }
 
-def geocode(request, location):
+def geocode(request, city, state):
+    location = f'{city}, {state}'
     opencage_api_key = OPEN_CAGE_API_KEY
     opencage_url = f'https://api.opencagedata.com/geocode/v1/json?q={location}&key={opencage_api_key}'
 
