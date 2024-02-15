@@ -19,9 +19,10 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import my_view
+from .views import my_view, geocode
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', my_view, name='my_view'),
+    path('api/geocode/<str:city>/<str:state>/', geocode, name='geocode'),
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) # # Needed during deployment, not development

@@ -1,24 +1,25 @@
 from django.shortcuts import render
 from django import forms
+from django.http import JsonResponse
+import requests
 
 from .location import get_lat_long
 from .hex import HomeCharacteristics, get_solar_timeseries, get_monthly_energy_balance, get_yearly_energy_usage, heating_types
+from .credentials import OPEN_CAGE_API_KEY
 from . import conversions
 
 class MyForm(forms.Form):
-    zip_code = forms.Field(label='What is your zip code?', initial="10001")
+
+    latitude = forms.Field(widget=forms.HiddenInput())
+    longitude = forms.Field(widget=forms.HiddenInput())
+
     square_footage = forms.DecimalField(label='What is the square footage of your conditioned home?', initial=2000)
     ceiling_height = forms.DecimalField(label='How high are your ceilings (in feet), on average?', initial=9)
 
-   # air_change_rate = forms.DecimalField(label='What is the Air Change Rate per hour?', initial=16)
-   # wall_insulation_rvalue = forms.DecimalField(label='What is your wall insulation R-Value?', initial=10)
-
     heat_temperature = forms.DecimalField(label='What is your thermostat to in the winter? (in F)', initial=72)
     cool_temperature = forms.DecimalField(label='What is your thermostat to in the summer? (F)', initial=72)
-   # home_heat_capacity = forms.DecimalField(label='How much energy (in kJ) do you have to put into the building to change the indoor temperature by 1 degree?', initial=10000)
-   # heating_type = forms.ChoiceField(choices=[('electric_radiator', 'Electric Radiator'), ('high_efficiency_heat_pump', 'High Efficiency Heat Pump')], initial='electric_radiator', label='Heating Type')
+
     south_facing_window_size = forms.DecimalField(label='How many square feet total are the south-facing windows?', initial=100)
-   # window_solar_heat_gain_coefficient = forms.DecimalField(label='Window Solar Heat Gain Coefficient', initial=0.5)
 
 def my_view(request):
     submitted_data = None
@@ -33,16 +34,12 @@ def my_view(request):
                 'ceiling_height': conversions.feet_to_meters(form.cleaned_data['ceiling_height']),
                 'heat_temperature': conversions.fahrenheit_to_celsius(form.cleaned_data['heat_temperature']),
                 'cool_temperature': conversions.fahrenheit_to_celsius(form.cleaned_data['cool_temperature']),
-                'zip_code': form.cleaned_data['zip_code'],
-                # 'air_change_rate': float(form.cleaned_data['air_change_rate']),
-                # 'wall_insulation_rvalue': float(form.cleaned_data['wall_insulation_rvalue']),
-                # 'home_heat_capacity': float(form.cleaned_data['home_heat_capacity']),
-                # 'heating_type': form.cleaned_data['heating_type'],
+                'latitude': float(form.cleaned_data['latitude']),
+                'longitude': float(form.cleaned_data['longitude']),
+
                 'south_facing_window_size': conversions.squareft_to_squaremeter(form.cleaned_data['south_facing_window_size']),
-          #      'window_solar_heat_gain_coefficient': float(form.cleaned_data['window_solar_heat_gain_coefficient']),
             }
             calculated_data = _do_the_thing(submitted_data)
-       #     print(calculated_data)
     else:
         form = MyForm()
 
@@ -61,11 +58,8 @@ HOME_HEAT_CAPACITY = 10000
 
 
 def _do_the_thing(submitted_data):
-    zip_code = submitted_data['zip_code']
-    lat, long = get_lat_long(zip_code)
-
-    home_before = HomeCharacteristics(latitude=float(lat),
-                        longitude=float(long),
+    home_before = HomeCharacteristics(latitude=float(submitted_data['latitude']),
+                        longitude=float(submitted_data['longitude']),
                         heating_setpoint_c=submitted_data['heat_temperature'],
                         cooling_setpoint_c=submitted_data['cool_temperature'],
                         hvac_capacity_w=HOME_HEAT_CAPACITY,
@@ -78,8 +72,8 @@ def _do_the_thing(submitted_data):
                         heating_type=heating_types["natural_gas"]
     )
 
-    home_after = HomeCharacteristics(latitude=float(lat),
-                        longitude=float(long),
+    home_after = HomeCharacteristics(latitude=float(submitted_data['latitude']),
+                        longitude=float(submitted_data['longitude']),
                         heating_setpoint_c=submitted_data['heat_temperature'],
                         cooling_setpoint_c=submitted_data['cool_temperature'],
                         hvac_capacity_w=HOME_HEAT_CAPACITY,
@@ -126,3 +120,20 @@ def _do_the_thing(submitted_data):
         "energy_usages": energy_usages,
         "difference": diff_from_before
     }
+
+def geocode(request, city, state):
+    location = f'{city}, {state}'
+    opencage_api_key = OPEN_CAGE_API_KEY
+    opencage_url = f'https://api.opencagedata.com/geocode/v1/json?q={location}&key={opencage_api_key}'
+
+    try:
+        response = requests.get(opencage_url)
+        data = response.json()
+
+        if response.status_code == 200 and 'results' in data:
+            result = data['results'][0]['geometry']
+            return JsonResponse({'latitude': result['lat'], 'longitude': result['lng']})
+        else:
+            return JsonResponse({'error': 'Geocoding failed'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
