@@ -10,7 +10,7 @@
 <body>
     <h2>How much could you reduce your CO2 emissions by switching to a heat pump?</h2>
     <div id="home-location-section">
-        <h3>Where are you located?</h3>
+        <h5>Where are you located?</h5>
         <form id="locationForm">
             <label for="city">City:</label>
             <input type="text" id="city" name="city" required>
@@ -72,7 +72,7 @@
         </form>
     </div>
     <div id="loadingSpinner">Loading...</div>
-    <div id="home-info-section">
+    <div id="home-info-section"  style="margin-top: 4rem;">
         <h5>Please enter in as much information as you can, and we'll estimate the rest.</h5>
         <form id="homeInfoForm" method="post" action="#results">
             {% csrf_token %}
