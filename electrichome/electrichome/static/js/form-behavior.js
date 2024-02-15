@@ -5,7 +5,7 @@ function getLatLon() {
     var locationInput = `${cityInput}/${stateInput}`;
 
     // Show loading spinner
-    document.getElementById('loadingSpinner').style.display = 'block';
+    document.getElementById('loadingSpinner').classList.add("submitting");
 
     fetch(`/api/geocode/${encodeURIComponent(locationInput)}/`)
         .then(response => response.json())
@@ -21,7 +21,7 @@ function getLatLon() {
             document.getElementById('id_longitude').value = longitude;
 
             // Hide loading spinner
-            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('loadingSpinner').classList.remove("submitting");
 
             updateUrl(cityInput, stateInput, latitude, longitude);
 

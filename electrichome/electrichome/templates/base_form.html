@@ -71,7 +71,7 @@
             <button type="button" onclick="getLatLon()">Submit</button>
         </form>
     </div>
-    <div id="loadingSpinner">Loading...</div>
+    <div id="loadingSpinner" class="loadingMessage">Loading...</div>
     <div id="home-info-section"  style="margin-top: 4rem;">
         <h5>Please enter in as much information as you can, and we'll estimate the rest.</h5>
         <form id="homeInfoForm" method="post" action="#results">
@@ -82,7 +82,7 @@
     </div>
 
 
-    <div id="loadingMessage">Calculating...</div>
+    <div id="loadingMessage" class="loadingMessage">Calculating...</div>
 
     {% if submitted_data %}
         {% load humanize %}
