@@ -89,6 +89,11 @@ def _do_the_thing(submitted_data):
     energy_usages = {}
     summer_months = [6, 7, 8, 9]
 
+    heating_type_labels = {
+        "natural_gas": "Natural Gas",
+        "heat_pump": "Heat Pump"
+    }
+
     def heating_months_only(pair):
         key, value = pair
         return key not in summer_months
@@ -104,7 +109,8 @@ def _do_the_thing(submitted_data):
         energy_usages[home.heating_type["value"]] = {
             "yearly_kwh" : yearly_energy_usage,
             "yearly_cost" : home.heating_type["cost_per_kwh"](yearly_energy_usage),
-            "yearly_co2" : home.heating_type["co2_per_kwh"](yearly_energy_usage)
+            "yearly_co2" : home.heating_type["co2_per_kwh"](yearly_energy_usage),
+            "heating_type": heating_type_labels[home.heating_type["value"]]
         }
 
     natural_gas = energy_usages[heating_types["natural_gas"]["value"]]

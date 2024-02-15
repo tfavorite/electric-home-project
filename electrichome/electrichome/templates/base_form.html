@@ -90,45 +90,28 @@
             reduce your CO2 emissions by <span class="saving">{{ calculated_data.difference.co2 }} metric tons</span>, 
             and {% if calculated_data.difference.cost < 0 %}it will cost <span class="cost">${{ calculated_data.difference.abs_cost }} more</span>{% else %}save <span class="saving">${{ calculated_data.difference.cost }}</span>{% endif %}.
         </div>
-
-        <!-- <div id="monthly_energy_balance_presentation"></div>
-        {{ calculated_data.monthly_energy_balance|json_script:"monthly_energy_balance" }}
-        <script>
-            const monthlyEnergyBalanceRaw = JSON.parse(document.getElementById("monthly_energy_balance").textContent);
-            // turn this into a model we can render as a table or chart (if needed)
-            const monthlyEnergyBalance = {};
-            Object.values(monthlyEnergyBalanceRaw.value).forEach( (value, index) => {
-                const variable = monthlyEnergyBalanceRaw.variable[index];
-                if ( !monthlyEnergyBalance[variable] ) {
-                    monthlyEnergyBalance[variable] = [];
-                }
-                monthlyEnergyBalance[variable].push(value);
-            });
-            monthlyEnergyBalance.Month = Object.values(monthlyEnergyBalanceRaw.month).slice(0, 12);
-
-            const table = document.createElement("table");
-            const headerRow = table.insertRow();
-            const tableRows = [];
-            Object.keys(monthlyEnergyBalance).forEach( header => {
-                const headerCell = headerRow.insertCell();
-                headerCell.appendChild(document.createTextNode(header));
-                const dimension = monthlyEnergyBalance[header];
-                Object.values(dimension).forEach( (value, index) => {
-                    if ( !tableRows[index] ) {
-                        tableRows[index] = table.insertRow();
-                    }
-                    const cell = tableRows[index].insertCell();
-                    cell.appendChild(document.createTextNode(value));
-                });
-            });
-
-            document.getElementById('monthly_energy_balance_presentation').appendChild(table);
-        </script> -->
+        <div class="chartContainer">
+            <div id="co2chart" class="chartdiv"></div>
+            <div id="costchart" class="chartdiv"></div>
+        </div>
         
-        <!-- <p>Calculated energy balance</p>
-        <p> {{ calculated_data.monthly_energy_balance }}</p> -->
-
+        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/themes/Dark.js"></script>
+        <script src="{% static 'js/charts.js' %}"></script>
+        {{ calculated_data.energy_usages|json_script:"energy_balance_json" }}
+        <script>
+            const energy_balances = JSON.parse(document.getElementById("energy_balance_json").textContent);
+            am5.ready(function() {
+                createChart("co2chart", "Yearly CO2 (tons)", "yearly_co2", Object.values(energy_balances));
+                createChart("costchart", "Yearly Cost", "yearly_cost", Object.values(energy_balances), { numberFormat: "'$'#", tooltipNumberFormat: "'$'#.00" });
+            });
+        </script>
     {% endif %}
+</body>
+</html>
+
 
 </body>
 </html>

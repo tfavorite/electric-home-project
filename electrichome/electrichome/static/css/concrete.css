@@ -395,3 +395,13 @@ span.saving {
 span.cost {
     color: lightslategray;
 }
+
+.chartContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chartdiv {
+  min-width: 45%;
+  height: 300px;
+}
