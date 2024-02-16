@@ -105,7 +105,7 @@
             const energy_balances = JSON.parse(document.getElementById("energy_balance_json").textContent);
             am5.ready(function() {
                 createChart("co2chart", "Yearly CO2 (tons)", "yearly_co2", Object.values(energy_balances));
-                createChart("costchart", "Yearly Cost", "yearly_cost", Object.values(energy_balances), { numberFormat: "'$'#", tooltipNumberFormat: "'$'#.00" });
+                createChart("costchart", "Yearly Cost", "yearly_cost", Object.values(energy_balances), "currency");
             });
         </script>
     {% endif %}

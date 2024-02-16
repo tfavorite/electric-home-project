@@ -1,4 +1,4 @@
-const createChart = function(chartdiv, chartName, fieldName, chartData, yAxisOptions) {
+const createChart = function(chartdiv, chartName, fieldName, chartData, type) {
     const root = am5.Root.new(chartdiv);
 
     // Set themes
@@ -49,11 +49,11 @@ const createChart = function(chartdiv, chartName, fieldName, chartData, yAxisOpt
       strokeOpacity: 0.1
     })
     
-    const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, Object.assign({
+    const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
       maxDeviation: 0.3,
       renderer: yRenderer ,
       min: 0
-    }, yAxisOptions)));
+    }));
 
     chart.topAxesContainer.children.push(am5.Label.new(root, {
         text: chartName,
@@ -66,8 +66,12 @@ const createChart = function(chartdiv, chartName, fieldName, chartData, yAxisOpt
     chart.get("colors").set("colors", [
         am5.color(0x800020),
         am5.color(0x04AA6D)
-      ]);
-    
+    ]);
+
+    if ( type === "currency" ) {
+        root.numberFormatter.set("numberFormat", "'$'#.00");
+    }
+   
     // Create series
     // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
     const series = chart.series.push(am5xy.ColumnSeries.new(root, {
