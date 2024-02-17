@@ -3,8 +3,8 @@
 A simple calculator to determine potential energy/cost savings from
 replacing an HVAC system from a furnace to an air-source heat pump.
 
-Created with Tim Favorite and Nam Pham as part of Terra.do's 
-Software Stacks course.
+Created by Joesan Gabaldon, Tim Favorite, and Nam Pham as part of Terra.do's 
+Software Stacks course, based on code provided by Jason Curtis.
 
 # Setup and launching (for development)
 
